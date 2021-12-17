@@ -9,7 +9,7 @@ const client = new Client({
   intents: [Intents.FLAGS.GUILDS],
 });
 
-// laod commands from the commands folder
+// load commands from the commands folder
 const commandFiles = fs
   .readdirSync("./commands")
   .filter((file) => file.endsWith(".js"));
@@ -23,7 +23,7 @@ const TEST_GUILD_ID = process.env["TEST_GUILD_ID"];
 
 const commands = [];
 
-// Creating a collection for commands in client
+// create a collection for commands in client
 client.commands = new Collection();
 
 for (const file of commandFiles) {
@@ -32,10 +32,10 @@ for (const file of commandFiles) {
   client.commands.set(command.data.name, command);
 }
 
-// When the client is ready, this only runs once
+// when the client is ready, this only runs once
 client.once("ready", () => {
   console.log("Ready!");
-  // Registering the commands in the client
+  // register the commands in the client
   const CLIENT_ID = client.user.id;
   const rest = new REST({
     version: "9",
@@ -46,7 +46,7 @@ client.once("ready", () => {
         await rest.put(Routes.applicationCommands(CLIENT_ID), {
           body: commands,
         });
-        console.log("Successfully registered application commands globally");
+        console.log("Successfully registered application commands globally!");
       } else {
         await rest.put(
           Routes.applicationGuildCommands(CLIENT_ID, TEST_GUILD_ID),
@@ -55,7 +55,7 @@ client.once("ready", () => {
           }
         );
         console.log(
-          "Successfully registered application commands for development guild"
+          "Successfully registered application commands for development guild!"
         );
       }
     } catch (error) {
@@ -79,5 +79,5 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-// Login to Discord with your client's token
+// login to discord with your client's token
 client.login(TOKEN);
