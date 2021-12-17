@@ -18,7 +18,6 @@ const commandFiles = fs
 const dotenv = require("dotenv");
 dotenv.config();
 const TOKEN = process.env["TOKEN"];
-
 const TEST_GUILD_ID = process.env["TEST_GUILD_ID"];
 
 const commands = [];
