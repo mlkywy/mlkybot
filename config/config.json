@@ -1,0 +1,50 @@
+{
+  "botSettings": {
+    "bitfieldIntents": [8]
+  },
+  "adminCommands": ["delete"],
+  "activitiesList": {
+    "youtube": {
+      "id": "880218394199220334",
+      "name": "Watch YouTube Together"
+    },
+    "sketchy_artist": {
+      "id": "879864070101172255",
+      "name": "Sketchy Artist"
+    },
+    "doodle_crew": {
+      "id": "878067389634314250",
+      "name": "Doodle Crew"
+    },
+    "poker_night": {
+      "id": "755827207812677713",
+      "name": "Poker Night"
+    },
+    "word_snacks": {
+      "id": "879863976006127627",
+      "name": "Word Snacks"
+    },
+    "betrayal": {
+      "id": "773336526917861400",
+      "name": "Betrayal.io"
+    },
+    "fishington": {
+      "id": "814288819477020702",
+      "name": "Fishington.io"
+    },
+    "chess": {
+      "id": "832012774040141894",
+      "name": "Chess in The Park"
+    }
+  },
+  "statuses": [
+    "🧘 I'm demonstrating that gravity is a hoax forever",
+    "🍁 420 servers!",
+    "Anyone else suicidal or is it just me?",
+    "阿保か",
+    "🎵 Hand me the aux cord",
+    "Now with /activity options!",
+    "Made with love by Koichi",
+    "🌎 It's flat"
+  ]
+}

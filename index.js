@@ -5,8 +5,17 @@ const { Routes } = require("discord-api-types/v9");
 const { Client, Intents, Collection } = require("discord.js");
 
 // create a new client instance
-const client = new Client({
-  intents: [Intents.FLAGS.GUILDS],
+const Bot = new Client({
+  intents: [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_VOICE_STATES,
+    Intents.FLAGS.GUILD_MEMBERS,
+    Intents.FLAGS.GUILD_PRESENCES,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+    Intents.FLAGS.GUILD_INVITES,
+  ],
 });
 
 // load commands from the commands folder
@@ -22,20 +31,20 @@ const TEST_GUILD_ID = process.env["TEST_GUILD_ID"];
 
 const commands = [];
 
-// create a collection for commands in client
-client.commands = new Collection();
+// create a collection for commands in bot
+Bot.commands = new Collection();
 
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
   commands.push(command.data.toJSON());
-  client.commands.set(command.data.name, command);
+  Bot.commands.set(command.data.name, command);
 }
 
 // when the client is ready, this only runs once
-client.once("ready", () => {
+Bot.once("ready", () => {
   console.log("Ready!");
-  // register the commands in the client
-  const CLIENT_ID = client.user.id;
+  // register the commands in the bot
+  const CLIENT_ID = Bot.user.id;
   const rest = new REST({
     version: "9",
   }).setToken(TOKEN);
@@ -63,9 +72,9 @@ client.once("ready", () => {
   })();
 });
 
-client.on("interactionCreate", async (interaction) => {
+Bot.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return;
-  const command = client.commands.get(interaction.commandName);
+  const command = Bot.commands.get(interaction.commandName);
   if (!command) return;
   try {
     await command.execute(interaction);
@@ -78,5 +87,5 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-// login to discord with your client's token
-client.login(TOKEN);
+// login to discord with your bot's token
+Bot.login(TOKEN);
