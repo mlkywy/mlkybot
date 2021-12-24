@@ -1,12 +1,16 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const getRandomLine = require("../components/getRandomLine.js");
 
+const data = new SlashCommandBuilder()
+  .setName("joke")
+  .setDescription("Replies with a joke.");
+
+const execute = async (interaction) => {
+  const joke = getRandomLine("./text/jokes.txt");
+  interaction.reply({ content: joke });
+};
+
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("joke")
-    .setDescription("Replies with a joke."),
-  async execute(interaction) {
-    let joke = getRandomLine("./text/jokes.txt");
-    interaction.reply({ content: joke });
-  },
+  data,
+  execute,
 };

@@ -25,10 +25,6 @@ const data = new SlashCommandBuilder()
   );
 
 const execute = async (interaction) => {
-  const memberName =
-    interaction.member.nickname !== null
-      ? interaction.member.nickname
-      : interaction.user.username;
   const guild = await interaction.member.guild.fetch();
   const member = await guild.members.fetch(interaction.user.id);
   const voiceChannel = member.voice.channel;
@@ -83,7 +79,7 @@ const sendInvite = async (...args) => {
     .setThumbnail(interaction.user.avatarURL())
     .setDescription(
       `<@${interaction.user.id}> has started a new ${activity.name} party!
-      
+
       You can join their party via the link below or by clicking on their name in <#${voiceChannel.id}> and clicking 'join activity'!`
     )
     .setTimestamp();
