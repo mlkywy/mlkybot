@@ -14,7 +14,7 @@ const statusRotator = async (Bot) => {
 const setRandomStatus = async (Bot) => {
   await Bot.user.setPresence(randomizeStatus());
   return new Promise((res) => {
-    setTimeout(res, 1000);
+    setTimeout(res, 24000);
   });
 };
 

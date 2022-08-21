@@ -4,7 +4,7 @@ const { Routes } = require("discord-api-types/v9");
 // require the necessary discord.js classes
 const { Client, Intents, Collection } = require("discord.js");
 // require statuses
-const statusRotator = require("./components/status-rotator");
+const statusRotator = require("./components/statusRotator");
 
 // create a new client instance
 const Bot = new Client({
