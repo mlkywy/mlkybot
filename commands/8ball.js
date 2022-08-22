@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const getRandomLine = require("../components/getRandomLine.js");
 
 const data = new SlashCommandBuilder()
@@ -14,9 +14,16 @@ const data = new SlashCommandBuilder()
 const execute = async (interaction) => {
   const question = interaction.options._hoistedOptions[0].value;
   const answer = getRandomLine("./text/8ball.txt");
+  const message = `**Question:** ${question}` + "\n" + `**Answer:** ${answer}`;
+
+  const embed = new EmbedBuilder()
+    .setColor(0xfeaab3)
+    .setTitle("Magic 8-Ball!")
+    .setDescription(message)
+    .setThumbnail("https://i.imgur.com/Sfwlk4R.png");
 
   interaction.reply({
-    content: `**Question:** ${question}` + "\n" + `**Answer:** ${answer}`,
+    embeds: [embed],
   });
 };
 

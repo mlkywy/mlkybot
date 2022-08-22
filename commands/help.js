@@ -5,7 +5,7 @@ const data = new SlashCommandBuilder()
   .setDescription("View all available commands.");
 
 const execute = async (interaction) => {
-  const helpEmbed = new EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor(0xfeaab3)
     .setTitle("mlkybot commands")
     .setDescription("This bot is still in development.")
@@ -26,7 +26,7 @@ const execute = async (interaction) => {
     });
 
   interaction.reply({
-    embeds: [helpEmbed],
+    embeds: [embed],
   });
 };
 

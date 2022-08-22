@@ -9,14 +9,14 @@ const execute = async (interaction) => {
   const answer = `Hex code: #${color}`;
   const url = `https://www.color-hex.com/color/${color}`;
 
-  const colorEmbed = new EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor("0x" + color)
     .setTitle("Click to view your color!")
     .setURL(url)
     .setDescription(answer);
 
   interaction.reply({
-    embeds: [colorEmbed],
+    embeds: [embed],
   });
 };
 
