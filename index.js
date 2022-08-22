@@ -1,12 +1,11 @@
 const fs = require("fs");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
-// require the necessary discord.js classes
-const { Client, Intents, Collection } = require("discord.js");
-// require statuses
 const statusRotator = require("./components/statusRotator");
+// Require the necessary Discord.js classes
+const { Client, Intents, Collection } = require("discord.js");
 
-// create a new client instance
+// Create a new client instance
 const Bot = new Client({
   intents: [
     Intents.FLAGS.GUILDS,
@@ -20,12 +19,12 @@ const Bot = new Client({
   ],
 });
 
-// load commands from the commands folder
+// Load commands from the commands folder
 const commandFiles = fs
   .readdirSync("./commands")
   .filter((file) => file.endsWith(".js"));
 
-// load the token from .env file
+// Load the token from .env file
 const dotenv = require("dotenv");
 dotenv.config();
 const TOKEN = process.env["TOKEN"];
@@ -33,7 +32,7 @@ const TEST_GUILD_ID = process.env["TEST_GUILD_ID"];
 
 const commands = [];
 
-// create a collection for commands in bot
+// Create a collection for commands in bot
 Bot.commands = new Collection();
 
 for (const file of commandFiles) {
@@ -42,12 +41,14 @@ for (const file of commandFiles) {
   Bot.commands.set(command.data.name, command);
 }
 
-// when the client is ready, this only runs once
+// When the client is ready, this only runs once
 Bot.once("ready", () => {
   console.log("Bot is ready!");
-  // custom statuses for bot
+  // Set username
+  Bot.user.setUsername("mlkybot");
+  // Custom statuses
   statusRotator(Bot);
-  // register the commands in the bot
+  // Register commands
   const CLIENT_ID = Bot.user.id;
   const rest = new REST({
     version: "9",
@@ -91,5 +92,5 @@ Bot.on("interactionCreate", async (interaction) => {
   }
 });
 
-// login to discord with your bot's token
+// Login to discord with bot's token
 Bot.login(TOKEN);
