@@ -14,6 +14,7 @@ const data = new SlashCommandBuilder()
 const execute = async (interaction) => {
   const question = interaction.options._hoistedOptions[0].value;
   const answer = getRandomLine("./text/8ball.txt");
+
   interaction.reply({
     content: `**Question:** ${question}` + "\n" + `**Answer:** ${answer}`,
   });
