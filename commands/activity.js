@@ -1,5 +1,10 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+} = require("discord.js");
+
 const { TOKEN } = process.env;
 const fetch = require("node-fetch");
 const { activitiesList } = require("../config/config.json");
@@ -7,21 +12,23 @@ const { activitiesList } = require("../config/config.json");
 const data = new SlashCommandBuilder()
   .setName("activity")
   .setDescription(
-    "Set up activities with your friends! (Must be in Voice Channel)"
+    "Set up activities with your friends! (You must be in voice channel!)"
   )
   .addStringOption((option) =>
     option
       .setName("type")
-      .setDescription("Choose the type of activity you want to create! (BETA)")
+      .setDescription("Choose the type of activity you want to create!")
       .setRequired(true)
-      .addChoice("Youtube", "youtube")
-      .addChoice("Sketchy Artist", "sketchy_artist")
-      .addChoice("Doodle Crew", "doodle_crew")
-      .addChoice("Poker Night", "poker_night")
-      .addChoice("Word Snacks", "word_snacks")
-      .addChoice("Betrayal.io", "betrayal")
-      .addChoice("Fishington.io", "fishington")
-      .addChoice("Chess in The Park", "chess")
+      .addChoices(
+        { name: "Youtube", value: "youtube" },
+        { name: "Sketchy Artist", value: "sketchy_artist" },
+        { name: "Doodle Crew", value: "doodle_crew" },
+        { name: "Poker Night", value: "poker_night" },
+        { name: "Word Snacks", value: "word_snacks" },
+        { name: "Betrayal.io", value: "betrayal" },
+        { name: "Fishington.io", value: "fishington" },
+        { name: "Chess in The Park", value: "chess" }
+      )
   );
 
 const execute = async (interaction) => {
@@ -73,7 +80,7 @@ const execute = async (interaction) => {
 
 const sendInvite = async (...args) => {
   const [interaction, activity, voiceChannel, invite] = args;
-  const inviteEmbed = new MessageEmbed()
+  const inviteEmbed = new EmbedBuilder()
     .setColor("#d34964")
     .setTitle(`New ${activity.name} party created!`)
     .setThumbnail(interaction.user.avatarURL())
@@ -83,8 +90,8 @@ const sendInvite = async (...args) => {
       You can join their party via the link below or by clicking on their name in <#${voiceChannel.id}> and clicking 'join activity'!`
     )
     .setTimestamp();
-  const row = new MessageActionRow().addComponents(
-    new MessageButton()
+  const row = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
       .setURL(`https://discord.gg/${invite.code}`)
       .setLabel("Join Activity")
       .setStyle("LINK")

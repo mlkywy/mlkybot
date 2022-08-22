@@ -2,20 +2,26 @@ const fs = require("fs");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const statusRotator = require("./components/statusRotator");
+
 // Require the necessary Discord.js classes
-const { Client, Intents, Collection } = require("discord.js");
+const {
+  Client,
+  GatewayIntentBits,
+  Partials,
+  Collection,
+} = require("discord.js");
 
 // Create a new client instance
 const Bot = new Client({
-  intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_VOICE_STATES,
-    Intents.FLAGS.GUILD_MEMBERS,
-    Intents.FLAGS.GUILD_PRESENCES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
-    Intents.FLAGS.GUILD_INVITES,
+  intents: [GatewayIntentBits.Guilds],
+  partials: [
+    Partials.Channel,
+    Partials.Message,
+    Partials.GuildMember,
+    Partials.GuildScheduledEvent,
+    Partials.Reaction,
+    Partials.ThreadMember,
+    Partials.User,
   ],
 });
 
