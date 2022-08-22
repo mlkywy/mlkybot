@@ -3,6 +3,8 @@ const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 // require the necessary discord.js classes
 const { Client, Intents, Collection } = require("discord.js");
+// require statuses
+const statusRotator = require("./components/statusRotator");
 
 // create a new client instance
 const Bot = new Client({
@@ -42,7 +44,9 @@ for (const file of commandFiles) {
 
 // when the client is ready, this only runs once
 Bot.once("ready", () => {
-  console.log("Ready!");
+  console.log("Bot is ready!");
+  // custom statuses for bot
+  statusRotator(Bot);
   // register the commands in the bot
   const CLIENT_ID = Bot.user.id;
   const rest = new REST({
