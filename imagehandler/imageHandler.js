@@ -15,7 +15,7 @@ class ImageHandler {
   #cached = [];
 
   count = 0;
-  current = `${this.#index}/${this.count}`;
+  current = `${this.#index + 1}/${this.count}`;
 
   /**
    * @param {{site: ('Gelbooru'|'Danbooru'), wildcard?: boolean, save?: boolean}} options
@@ -45,10 +45,10 @@ class ImageHandler {
     this.count = links.length;
 
     await this.#cacheImage(this.#links[this.#index]);
-    return this.getImage();
+    return this.#getImage();
   }
 
-  getImage() {
+  #getImage() {
     const img = this.#cached[this.#index];
     return img;
   }
@@ -65,13 +65,13 @@ class ImageHandler {
   async next() {
     this.#index += 1;
     await this.#cacheImage(this.#links[this.#index]);
-    return this.getImage();
+    return this.#getImage();
   }
 
   prev() {
     if (this.#index === 0) return;
     this.#index -= 1;
-    return this.getImage();
+    return this.#getImage();
   }
 
   #getLinks(data) {
