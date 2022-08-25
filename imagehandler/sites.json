@@ -1,0 +1,23 @@
+{
+  "Gelbooru": {
+    "url": "https://gelbooru.com/index.php?page=post&s=list",
+    "imgSelector": ".thumbnail-preview",
+    "pageSelector": ".paginator a",
+    "pageEndpoint": "&pid=",
+    "pageMultiplier": 24
+  },
+  "Danbooru": {
+    "url": "https://danbooru.donmai.us/posts?",
+    "imgSelector": ".post-preview-container",
+    "pageSelector": ".paginator a",
+    "pageEndpoint": "&page=",
+    "pageMultiplier": 1
+  },
+  "Safebooru": {
+    "url": "https://safebooru.org/index.php?page=post&s=list",
+    "imgSelector": ".thumb",
+    "pageSelector": ".pagination a",
+    "pageEndpoint": "&pid=",
+    "pageMultiplier": 20
+  }
+}
