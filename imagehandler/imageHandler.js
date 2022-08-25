@@ -15,7 +15,9 @@ class ImageHandler {
   #cached = [];
 
   count = 0;
-  current = `${this.#index + 1}/${this.count}`;
+  get current() {
+    return `${this.#index + 1}/${this.count}`;
+  }
 
   /**
    * @param {{site: ('Gelbooru'|'Danbooru'|'Safebooru'), wildcard?: boolean, save?: boolean}} options
