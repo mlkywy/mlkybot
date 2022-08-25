@@ -64,6 +64,7 @@ class ImageHandler {
 
   async next() {
     this.#index += 1;
+    if (this.#index < this.#cached.length) return this.#cached[this.#index];
     await this.#cacheImage(this.#links[this.#index]);
     return this.#getImage();
   }
