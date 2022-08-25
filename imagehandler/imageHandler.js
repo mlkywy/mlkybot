@@ -118,7 +118,7 @@ class ImageHandler {
     return Promise.all(allLinks);
   }
 
-  async saveImage(url, dirname = 'images') {
+  async #saveImage(url, dirname = 'images') {
     const dir = path.resolve('./', dirname, this.#siteName);
     const pathName = path.join(dir, this.#tags, uuidv4() + '.png');
     fs.ensureDir(path.join(dir, this.#tags)).then(() => {
