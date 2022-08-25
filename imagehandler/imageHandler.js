@@ -18,7 +18,7 @@ class ImageHandler {
   current = `${this.#index + 1}/${this.count}`;
 
   /**
-   * @param {{site: ('Gelbooru'|'Danbooru'), wildcard?: boolean, save?: boolean}} options
+   * @param {{site: ('Gelbooru'|'Danbooru'|'Safebooru'), wildcard?: boolean, save?: boolean}} options
    * @returns {ImageHandler} ImageHandler
    */
   constructor(options) {
