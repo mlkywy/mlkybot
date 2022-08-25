@@ -3,6 +3,7 @@ const sites = require('./sites.json');
 class Site {
   constructor(options) {
     this.url = options.url;
+    this.thumbnailSelector = options.thumbnailSelector;
     this.imgSelector = options.imgSelector;
     this.pageSelector = options.pageSelector;
     this.pageEndpoint = options.pageEndpoint;
