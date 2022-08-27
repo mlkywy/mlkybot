@@ -15,7 +15,9 @@ class ImageHandler {
   #cached = [];
 
   count = 0;
-  current = `${this.#index + 1}/${this.count}`;
+  get current() {
+    return `${this.#index + 1}/${this.count}`;
+  }
 
   /**
    * @param {{site: ('Gelbooru'|'Danbooru'|'Safebooru'), wildcard?: boolean, save?: boolean}} options
@@ -59,7 +61,7 @@ class ImageHandler {
     const imageNode = html.querySelector(this.#site.imgSelector);
     const imageUrl = imageNode['_attrs']?.src ?? imageNode.attributes.src;
     this.#cached.push(imageUrl);
-    if (this.#options.save) await this.saveImage(imageUrl);
+    if (this.#options.save) await this.#saveImage(imageUrl);
   }
 
   async next() {
