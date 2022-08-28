@@ -7,6 +7,7 @@ class Site {
     this.imgSelector = options.imgSelector;
     this.pageSelector = options.pageSelector;
     this.pageEndpoint = options.pageEndpoint;
+    this.postsPerPage = options.postsPerPage;
     this.getPageNum = (p) => (p === 1 ? 0 : p * options.pageMultiplier);
   }
 }
