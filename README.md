@@ -12,6 +12,9 @@
 ## Getting Started
 ...
 
+## Contributors
+- [Alina](https://github.com/mlkywy)
+- [Koichi](https://github.com/0xkoichi)
 
 
 
