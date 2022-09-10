@@ -3,6 +3,7 @@ const { parse } = require('node-html-parser');
 const sites = require('./sites');
 const fs = require('fs-extra');
 const path = require('path');
+const Piscina = require('piscina');
 const uuidv4 = require('uuid').v4;
 
 class ImageHandler {
@@ -11,16 +12,18 @@ class ImageHandler {
   #tags;
   #links;
   #siteName;
+  #limit;
   #index = 0;
   #cached = [];
 
   count = 0;
-  get current() {
-    return `${this.#index + 1}/${this.count}`;
+
+  get currentIndex() {
+    return this.#index + 1;
   }
 
   /**
-   * @param {{site: ('Gelbooru'|'Danbooru'|'Safebooru'), wildcard?: boolean, save?: boolean}} options
+   * @param {{site: ('Gelbooru'|'Danbooru'|'Safebooru'), limit?: number, save?: boolean}} options
    * @returns {ImageHandler} ImageHandler
    */
   constructor(options) {
@@ -29,16 +32,23 @@ class ImageHandler {
     this.#options.save = options.save ?? false;
     this.#siteName = options.site.toLowerCase();
     this.#site = sites[options.site];
+    this.#limit = options.limit ?? 20;
   }
 
-  async fetch(tags) {
+  /**
+   *
+   * @param {string} tags - Tags to search for.
+   * @param {boolean} useWildCard - Use wildcard for this search.
+   * @returns Image URL
+   */
+  async fetch(tags, useWildCard = false) {
     const wanted = tags.replace(`/\s/g`, '_');
     if (this.#tags === wanted && this.#cached.length >= this.#index)
       return this.#cached[this.#index];
 
     this.#tags = wanted;
     this.#cached = [];
-    if (this.#options.wildcard) this.#tags += '_*';
+    if (useWildCard) this.#tags += '_*';
 
     const tagParam = this.#site.url.endsWith('?') ? 'tags=' : '&tags=';
     const url = this.#site.url + tagParam + this.#tags;
@@ -77,26 +87,43 @@ class ImageHandler {
     return this.#getImage();
   }
 
-  #getLinks(data) {
-    const html = parse(data);
-    const links = [];
-    for (let e of html.querySelectorAll(this.#site.thumbnailSelector)) {
-      const href =
-        e.firstChild['_attrs']?.href ?? e.querySelector('a').attributes.href;
-      const link = href.startsWith('https://')
-        ? href
-        : this.#site.url.slice(0, this.#site.url.lastIndexOf('/') + 1) + href;
-      links.push(link);
+  async #getLinksMultiThread(data) {
+    const piscina = new Piscina({
+      filename: path.resolve(__dirname, 'worker.js'),
+    });
+
+    const url = this.#site.url;
+    const thumbnailSelector = this.#site.thumbnailSelector;
+    const numberOfChunks = Math.ceil(data.length / 8);
+
+    const chunks = [...Array(numberOfChunks)].map((value, index) =>
+      data.slice(index * 8, (index + 1) * 8)
+    );
+
+    const workers = [];
+    for (let i = 0; i < chunks.length; i++) {
+      workers.push(piscina.run({ data: chunks[i], url, thumbnailSelector }));
     }
-    return links;
+
+    const links = await Promise.all([...workers]);
+
+    return links.flat();
   }
 
   async #getPageCount(url) {
     try {
-      const { data } = await axios.get(url);
+      const { data } = await axios.get(
+        url + this.#site.pageEndpoint + this.#site.getPageNum(this.#limit)
+      );
       const html = parse(data);
-      let paginator = html.querySelectorAll(this.#site.pageSelector);
-      return paginator?.length > 8 ? paginator.length - 2 : paginator.length;
+      let pageNum = 0;
+
+      for (let e of html.querySelectorAll(this.#site.pageSelector)) {
+        if (parseInt(e.firstChild.innerText)) {
+          pageNum = parseInt(e.firstChild.innerText);
+          return pageNum;
+        }
+      }
     } catch (e) {
       return Promise.reject('Unable to get page count!');
     }
@@ -104,21 +131,19 @@ class ImageHandler {
 
   async #getAllPagesLinks(url) {
     const pages = [];
-    const allLinks = [];
-    const count = await this.#getPageCount(url);
+    const pageCount = await this.#getPageCount(url);
 
-    for (let i = 1; i < count; i++) {
+    for (let i = 1; i < pageCount; i++) {
       const pageNum = this.#site.getPageNum(i);
       const pageUrl = url + this.#site.pageEndpoint + pageNum;
+
       pages.push(axios.get(pageUrl));
     }
 
-    for await (const page of pages) {
-      const links = this.#getLinks(page.data);
-      allLinks.push(...links);
-    }
+    const resolvedRequests = await Promise.all(pages);
+    const resolvedPages = resolvedRequests.map((p) => p.data);
 
-    return Promise.all(allLinks);
+    return this.#getLinksMultiThread(resolvedPages);
   }
 
   async #saveImage(url, dirname = 'images') {
