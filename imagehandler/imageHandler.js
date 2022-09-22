@@ -1,10 +1,10 @@
-const axios = require('axios');
-const { parse } = require('node-html-parser');
-const sites = require('./sites');
-const fs = require('fs-extra');
-const path = require('path');
-const Piscina = require('piscina');
-const uuidv4 = require('uuid').v4;
+const axios = require("axios");
+const { parse } = require("node-html-parser");
+const sites = require("./sites");
+const fs = require("fs-extra");
+const path = require("path");
+const Piscina = require("piscina");
+const uuidv4 = require("uuid").v4;
 
 class ImageHandler {
   #options;
@@ -42,15 +42,15 @@ class ImageHandler {
    * @returns Image URL
    */
   async fetch(tags, useWildCard = false) {
-    const wanted = tags.replace(`/\s/g`, '_');
+    const wanted = tags.replace(`/\s/g`, "_");
     if (this.#tags === wanted && this.#cached.length >= this.#index)
       return this.#cached[this.#index];
 
     this.#tags = wanted;
     this.#cached = [];
-    if (useWildCard) this.#tags += '_*';
+    if (useWildCard) this.#tags += "_*";
 
-    const tagParam = this.#site.url.endsWith('?') ? 'tags=' : '&tags=';
+    const tagParam = this.#site.url.endsWith("?") ? "tags=" : "&tags=";
     const url = this.#site.url + tagParam + this.#tags;
     const links = await this.#getAllPagesLinks(url);
     this.#links = links;
@@ -69,7 +69,7 @@ class ImageHandler {
     const { data } = await axios.get(url);
     const html = parse(data);
     const imageNode = html.querySelector(this.#site.imgSelector);
-    const imageUrl = imageNode['_attrs']?.src ?? imageNode.attributes.src;
+    const imageUrl = imageNode["_attrs"]?.src ?? imageNode.attributes.src;
     this.#cached.push(imageUrl);
     if (this.#options.save) await this.#saveImage(imageUrl);
   }
@@ -89,7 +89,7 @@ class ImageHandler {
 
   async #getLinksMultiThread(data) {
     const piscina = new Piscina({
-      filename: path.resolve(__dirname, 'worker.js'),
+      filename: path.resolve(__dirname, "worker.js"),
     });
 
     const url = this.#site.url;
@@ -125,7 +125,7 @@ class ImageHandler {
         }
       }
     } catch (e) {
-      return Promise.reject('Unable to get page count!');
+      return Promise.reject("Unable to get page count!");
     }
   }
 
@@ -146,21 +146,21 @@ class ImageHandler {
     return this.#getLinksMultiThread(resolvedPages);
   }
 
-  async #saveImage(url, dirname = 'images') {
-    const dir = path.resolve('./', dirname, this.#siteName);
-    const pathName = path.join(dir, this.#tags, uuidv4() + '.png');
-    fs.ensureDir(path.join(dir, this.#tags)).then(() => {
-      axios({
-        method: 'get',
-        url,
-        responseType: 'stream',
-      })
-        .then((res) => {
-          res.data.pipe(fs.createWriteStream(pathName));
-        })
-        .catch((err) => Promise.reject(err));
-    });
-  }
+  // async #saveImage(url, dirname = 'images') {
+  //   const dir = path.resolve('./', dirname, this.#siteName);
+  //   const pathName = path.join(dir, this.#tags, uuidv4() + '.png');
+  //   fs.ensureDir(path.join(dir, this.#tags)).then(() => {
+  //     axios({
+  //       method: 'get',
+  //       url,
+  //       responseType: 'stream',
+  //     })
+  //       .then((res) => {
+  //         res.data.pipe(fs.createWriteStream(pathName));
+  //       })
+  //       .catch((err) => Promise.reject(err));
+  //   });
+  // }
 }
 
 module.exports = ImageHandler;
