@@ -146,21 +146,21 @@ class ImageHandler {
     return this.#getLinksMultiThread(resolvedPages);
   }
 
-  // async #saveImage(url, dirname = 'images') {
-  //   const dir = path.resolve('./', dirname, this.#siteName);
-  //   const pathName = path.join(dir, this.#tags, uuidv4() + '.png');
-  //   fs.ensureDir(path.join(dir, this.#tags)).then(() => {
-  //     axios({
-  //       method: 'get',
-  //       url,
-  //       responseType: 'stream',
-  //     })
-  //       .then((res) => {
-  //         res.data.pipe(fs.createWriteStream(pathName));
-  //       })
-  //       .catch((err) => Promise.reject(err));
-  //   });
-  // }
+  async #saveImage(url, dirname = "images") {
+    const dir = path.resolve("./", dirname, this.#siteName);
+    const pathName = path.join(dir, this.#tags, uuidv4() + ".png");
+    fs.ensureDir(path.join(dir, this.#tags)).then(() => {
+      axios({
+        method: "get",
+        url,
+        responseType: "stream",
+      })
+        .then((res) => {
+          res.data.pipe(fs.createWriteStream(pathName));
+        })
+        .catch((err) => Promise.reject(err));
+    });
+  }
 }
 
 module.exports = ImageHandler;
