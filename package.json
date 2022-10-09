@@ -1,5 +1,5 @@
 {
-  "name": "brainchild-v2",
+  "name": "mlkybot",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,17 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alshei/brainchild-v2.git"
+    "url": "git+https://github.com/mlkywy/mlkywbot.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/alshei/brainchild-v2/issues"
+    "url": "https://github.com/mlkywy/mlkywbot/issues"
   },
-  "homepage": "https://github.com/alshei/brainchild-v2#readme",
+  "homepage": "https://github.com/mlkywy/mlkywbot#readme",
   "dependencies": {
     "axios": "^0.27.2",
-    "discord-api-types": "^0.25.2",
     "discord.js": "^14.2.0",
     "dotenv": "^10.0.0",
     "fs-extra": "^10.1.0",

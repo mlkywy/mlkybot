@@ -1,6 +1,5 @@
 const fs = require("fs");
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
+const { REST, Routes } = require("discord.js");
 const statusRotator = require("./components/statusRotator");
 
 // Require the necessary Discord.js classes
@@ -50,17 +49,25 @@ for (const file of commandFiles) {
 // When the client is ready, this only runs once
 Bot.once("ready", () => {
   console.log("Bot is ready!");
+
   // Set username
   Bot.user.setUsername("mlkybot");
+
   // Custom statuses
   statusRotator(Bot);
+
   // Register commands
   const CLIENT_ID = Bot.user.id;
+
+  // REST v10
   const rest = new REST({
-    version: "9",
+    version: "10",
   }).setToken(TOKEN);
+
   (async () => {
     try {
+      console.log("Started refreshing application (/) commands.");
+
       if (!TEST_GUILD_ID) {
         await rest.put(Routes.applicationCommands(CLIENT_ID), {
           body: commands,
@@ -85,8 +92,11 @@ Bot.once("ready", () => {
 
 Bot.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return;
+
   const command = Bot.commands.get(interaction.commandName);
+
   if (!command) return;
+
   try {
     await command.execute(interaction);
   } catch (error) {
