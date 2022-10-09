@@ -5,9 +5,12 @@ const {
   ButtonBuilder,
 } = require("discord.js");
 
-const { TOKEN } = process.env;
 const fetch = require("node-fetch");
 const { activitiesList } = require("../config/config.json");
+
+const dotenv = require("dotenv");
+dotenv.config();
+const { TOKEN } = process.env;
 
 const data = new SlashCommandBuilder()
   .setName("activity")
@@ -34,24 +37,29 @@ const data = new SlashCommandBuilder()
 const execute = async (interaction) => {
   const guild = await interaction.member.guild.fetch();
   const member = await guild.members.fetch(interaction.user.id);
-  const voiceChannel = member.voice.channel;
-  //   console.log(interaction);
-  if (!voiceChannel || voiceChannel.type !== "GUILD_VOICE")
+  const voiceChannel = await member.voice.channel;
+
+  if (voiceChannel) {
+    console.log(`${member.user.tag} is connected to ${voiceChannel.name}!`);
+  } else {
+    console.log(`${member.user.tag} is not connected.`);
     return await interaction.reply({
       content: ":x: | You must be in a **voice** channel!",
       ephemeral: true,
     });
-  if (!voiceChannel.permissionsFor(guild.me).has("CREATE_INSTANT_INVITE"))
+  }
+
+  if (!member.permissionsIn(voiceChannel)) {
     return await interaction.reply({
-      content:
-        ":x: | I need the **'CREATE_INSTANT_INVITE'** permission to do that.",
+      content: ":x: | You are missing permissions.",
       ephemeral: true,
     });
+  }
 
   const activityValue = interaction.options["_hoistedOptions"][0].value;
   const activity = activitiesList[activityValue];
 
-  fetch(`https://discord.com/api/v9/channels/${voiceChannel.id}/invites`, {
+  fetch(`https://discord.com/api/v10/channels/${voiceChannel.id}/invites`, {
     method: "POST",
     body: JSON.stringify({
       max_age: 86400,
@@ -81,7 +89,7 @@ const execute = async (interaction) => {
 const sendInvite = async (...args) => {
   const [interaction, activity, voiceChannel, invite] = args;
   const inviteEmbed = new EmbedBuilder()
-    .setColor("#d34964")
+    .setColor(0xfeaab3)
     .setTitle(`New ${activity.name} party created!`)
     .setThumbnail(interaction.user.avatarURL())
     .setDescription(
@@ -94,19 +102,12 @@ const sendInvite = async (...args) => {
     new ButtonBuilder()
       .setURL(`https://discord.gg/${invite.code}`)
       .setLabel("Join Activity")
-      .setStyle("LINK")
+      .setStyle(5)
   );
   await interaction.reply({
-    content: `Join via the link: https://discord.gg/${invite.code}`,
-    ephemeral: true,
-  });
-
-  const msg = await interaction.followUp({
     embeds: [inviteEmbed],
     components: [row],
-    fetchReply: true,
   });
-  setTimeout(() => msg.delete(), 600000);
 };
 
 module.exports = {
