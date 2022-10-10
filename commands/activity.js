@@ -38,6 +38,7 @@ const execute = async (interaction) => {
   const guild = await interaction.member.guild.fetch();
   const member = await guild.members.fetch(interaction.user.id);
   const voiceChannel = await member.voice.channel;
+  console.log("GUILD " + guild, "MEMBER " + member, "VC " + voiceChannel);
 
   if (voiceChannel) {
     console.log(`${member.user.tag} is connected to ${voiceChannel.name}!`);
