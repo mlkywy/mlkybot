@@ -11,11 +11,6 @@ const execute = async (interaction) => {
     .setDescription("This bot is still in development.")
     .addFields(
       { name: "/help", value: "View all available commands." },
-      {
-        name: "/activity {type}",
-        value:
-          "Set up activities with your friends! (You must be in voice channel!)",
-      },
       { name: "/8ball {question}", value: "Ask and you shall recieve." },
       { name: "/joke", value: "Replies with a joke." },
       { name: "/color", value: "Generates a random color." }
