@@ -1,5 +1,4 @@
 const fs = require("fs");
-const { REST, Routes } = require("discord.js");
 const statusRotator = require("./components/statusRotator");
 
 // Require the necessary Discord.js classes
@@ -8,11 +7,13 @@ const {
   GatewayIntentBits,
   Partials,
   Collection,
+  REST,
+  Routes,
 } = require("discord.js");
 
 // Create a new client instance
 const Bot = new Client({
-  intents: [GatewayIntentBits.Guilds],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
   partials: [
     Partials.Channel,
     Partials.Message,
@@ -32,8 +33,7 @@ const commandFiles = fs
 // Load the token from .env file
 const dotenv = require("dotenv");
 dotenv.config();
-const TOKEN = process.env["TOKEN"];
-const TEST_GUILD_ID = process.env["TEST_GUILD_ID"];
+const { TOKEN, TEST_GUILD_ID } = process.env;
 
 const commands = [];
 
@@ -105,6 +105,21 @@ Bot.on("interactionCreate", async (interaction) => {
       content: "There was an error while executing this command!",
       ephemeral: true,
     });
+  }
+});
+
+Bot.on("voiceStateUpdate", (oldVoiceState, newVoiceState) => {
+  // Listening to the voiceStateUpdate event
+  if (newVoiceState.channel) {
+    // The member connected to a channel.
+    console.log(
+      `${newVoiceState.member.user.tag} connected to ${newVoiceState.channel.name}.`
+    );
+  } else if (oldVoiceState.channel) {
+    // The member disconnected from a channel.
+    console.log(
+      `${oldVoiceState.member.user.tag} disconnected from ${oldVoiceState.channel.name}.`
+    );
   }
 });
 

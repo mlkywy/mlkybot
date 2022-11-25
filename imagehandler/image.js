@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const ImageHandler = require("../imagehandler");
+const ImageHandler = require(".");
 
 const data = new SlashCommandBuilder()
   .setName("image")
