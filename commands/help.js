@@ -13,9 +13,10 @@ const execute = async (interaction) => {
       { name: "/help", value: "View all available commands." },
       { name: "/8ball {question}", value: "Ask and you shall recieve." },
       { name: "/joke", value: "Replies with a joke." },
-      { name: "/color", value: "Generates a random color." }
+      { name: "/color", value: "Generates a random color." },
+      { name: "/lyrics {artist} {title}", value: "Get the lyrics of a song." },
+      { name: "/weather {city} {units}", value: "Get the weather in a city." }
     )
-    .setTimestamp()
     .setFooter({
       text: "Made with ❤️ by Alina!",
     });

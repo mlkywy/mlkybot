@@ -5,7 +5,7 @@ const apiKey = OPENWEATHER_API_KEY;
 
 const data = new SlashCommandBuilder()
   .setName("weather")
-  .setDescription("Get the weather of an area.")
+  .setDescription("Get the weather in a city.")
   .addStringOption((option) =>
     option
       .setName("city")
@@ -65,7 +65,10 @@ const execute = async (interaction) => {
       const embed = new EmbedBuilder()
         .setColor(0xfeaab3)
         .setTitle(`Weather in ${data.name}`)
-        .setDescription(message);
+        .setDescription(message)
+        .setFooter({
+          text: "Data provided by the OpenWeatherMap API.",
+        });
 
       interaction.reply({
         embeds: [embed],

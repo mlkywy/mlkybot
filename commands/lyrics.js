@@ -34,7 +34,10 @@ const execute = async (interaction) => {
       .setColor(0xfeaab3)
       .setTitle(song.title)
       .setDescription(song.lyrics)
-      .setThumbnail(song.albumArt);
+      .setThumbnail(song.albumArt)
+      .setFooter({
+        text: "Lyrics provided by the GENIUS API.",
+      });
 
     interaction.reply({
       embeds: [embed],
