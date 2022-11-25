@@ -14,7 +14,8 @@ const data = new SlashCommandBuilder()
 const execute = async (interaction) => {
   const question = interaction.options._hoistedOptions[0].value;
   const answer = getRandomLine("./text/8ball.txt");
-  const message = `**Question:** ${question}` + "\n" + `**Answer:** ${answer}`;
+  const message = `**Question:** ${question}
+  **Answer:** ${answer}`;
 
   const embed = new EmbedBuilder()
     .setColor(0xfeaab3)

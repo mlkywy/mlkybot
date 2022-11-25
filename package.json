@@ -31,6 +31,7 @@
     "node-html-parser": "^5.4.2-0",
     "node-ts": "^5.1.2",
     "nodemon": "^2.0.15",
+    "openweather-apis": "^4.4.2",
     "piscina": "^3.2.0",
     "uuid": "^8.3.2"
   }
